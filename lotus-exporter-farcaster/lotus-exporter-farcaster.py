@@ -416,6 +416,7 @@ def main():
                 worker_host =  "unknown"
             task = str(job['Task'])
             job_start_time = str(job['Start'])
+            job_start_time = job_start_time[:-1]
             run_wait = str(job['RunWait'])
             job_start_epoch = time.mktime(time.strptime(job_start_time.split('.')[0], '%Y-%m-%dT%H:%M:%S'))
             print(f'lotus_miner_worker_job {{ miner_id="{miner_id}", job_id="{job_id}", worker_host="{ worker_host }", task="{task}", sector_id="{sector}", job_start_time="{job_start_time}", run_wait="{run_wait}" }} { START_TIME - job_start_epoch }')
@@ -468,19 +469,19 @@ def main():
         if finalized_date != "":
             print(f'lotus_miner_sector_event {{ miner_id="{miner_id}", sector_id="{ sector }", event_type="finalized" }} { finalized_date }')
 
-        if detail["result"]["State"] not in ["Proving", "Removed"]:
-            for deal in detail["result"]["Deals"]:
-                if deal != 0:
-                    deal_info = daemon_get_json("StateMarketStorageDeal", [deal, empty_tipsetkey])
-                    deal_is_verified = deal_info["result"]["Proposal"]["VerifiedDeal"]
-                    deal_size = deal_info["result"]["Proposal"]["PieceSize"]
-                    deal_slash_epoch = deal_info["result"]["State"]["SlashEpoch"]
-                    deal_price_per_epoch = deal_info["result"]["Proposal"]["StoragePricePerEpoch"]
-                    deal_provider_collateral = deal_info["result"]["Proposal"]["ProviderCollateral"]
-                    deal_client_collateral = deal_info["result"]["Proposal"]["ClientCollateral"]
-                    deal_start_epoch = deal_info["result"]["Proposal"]["StartEpoch"]
-                    deal_end_epoch = deal_info["result"]["Proposal"]["EndEpoch"]
-                    print(f'lotus_miner_sector_sealing_deals_size {{ miner_id="{miner_id}", sector_id="{ sector }", deal_id="{ deal }", deal_is_verified="{ deal_is_verified }", deal_slash_epoch="{ deal_slash_epoch }", deal_price_per_epoch="{ deal_price_per_epoch }",deal_provider_collateral="{ deal_provider_collateral }", deal_client_collateral="{ deal_client_collateral }", deal_size="{ deal_size }", deal_start_epoch="{ deal_start_epoch }", deal_end_epoch="{ deal_end_epoch }" }} 1')
+        # if detail["result"]["State"] not in ["Proving", "Removed"]:
+        #     for deal in detail["result"]["Deals"]:
+        #         if deal != 0:
+        #             deal_info = daemon_get_json("StateMarketStorageDeal", [deal, empty_tipsetkey])
+        #             deal_is_verified = deal_info["result"]["Proposal"]["VerifiedDeal"]
+        #             deal_size = deal_info["result"]["Proposal"]["PieceSize"]
+        #             deal_slash_epoch = deal_info["result"]["State"]["SlashEpoch"]
+        #             deal_price_per_epoch = deal_info["result"]["Proposal"]["StoragePricePerEpoch"]
+        #             deal_provider_collateral = deal_info["result"]["Proposal"]["ProviderCollateral"]
+        #             deal_client_collateral = deal_info["result"]["Proposal"]["ClientCollateral"]
+        #             deal_start_epoch = deal_info["result"]["Proposal"]["StartEpoch"]
+        #             deal_end_epoch = deal_info["result"]["Proposal"]["EndEpoch"]
+        #             print(f'lotus_miner_sector_sealing_deals_size {{ miner_id="{miner_id}", sector_id="{ sector }", deal_id="{ deal }", deal_is_verified="{ deal_is_verified }", deal_slash_epoch="{ deal_slash_epoch }", deal_price_per_epoch="{ deal_price_per_epoch }",deal_provider_collateral="{ deal_provider_collateral }", deal_client_collateral="{ deal_client_collateral }", deal_size="{ deal_size }", deal_start_epoch="{ deal_start_epoch }", deal_end_epoch="{ deal_end_epoch }" }} 1')
 
     # GENERATE DEADLINES
     proven_partitions = daemon_get_json("StateMinerDeadlines", [miner_id, empty_tipsetkey])
