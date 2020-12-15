@@ -61,8 +61,8 @@ It generates metrics that are exposed by node-exporter to prometheus.
 ```
 git clone https://github.com/s0nik42/lotus-farcaster.git
 cd lotus-farcaster/lotus-exporter-farcaster
-chmox +x install.sh
-./install.sh LOTUS_USERNAME
+chmod +x install.sh
+./install.sh LOTUS_USER_USERNAME
 ```
 
 ## Install the Grafana Dashboard 
